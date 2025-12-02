@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ATM Cash Dispenser</title>
+<style>
+body {
+    background: #111;
+    color: #0f0;
+    font-family: Consolas, monospace;
+    padding: 20px;
+}
+.container {
+    width: 600px;
+    margin: auto;
+    background: #000;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #0f0;
+}
+button {
+    width: 200px;
+    padding: 10px;
+    margin: 5px;
+    background: black;
+    border: 1px solid #0f0;
+    color: #0f0;
+    cursor: pointer;
+}
+input {
+    width: 200px;
+    padding: 10px;
+    margin: 10px;
+    background: #222;
+    border: 1px solid #0f0;
+    color: #0f0;
+}
+pre {
+    white-space: pre-wrap;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>ATM CASH DISPENSER SIMULATOR</h2>
+
+<div id="menu">
+    <button onclick="insertNote()">Insert Note</button><br>
+    <button onclick="deleteNote()">Delete Note</button><br>
+    <button onclick="searchNote()">Search Note</button><br>
+    <button onclick="displayNotes()">Display Notes</button><br>
+    <button onclick="dispenseCash()">Withdraw Cash</button><br>
+</div>
+
+<pre id="output"></pre>
+</div>
+
+<script>
+let notes = [5000, 1000, 500, 100];
+
+function print(msg) {
+    document.getElementById("output").innerText = msg;
+}
+
+// Insert Note
+function insertNote() {
+    let note = prompt("Enter note to insert:");
+    if (!note) return;
+    notes.push(parseInt(note));
+    print("Note inserted!\n\nCurrent Notes: " + notes.join(", "));
+}
+
+// Delete Note
+function deleteNote() {
+    let note = parseInt(prompt("Enter note value to delete:"));
+    let index = notes.indexOf(note);
+
+    if (index !== -1) {
+        notes.splice(index, 1);
+        print("Note deleted!\n\nRemaining Notes: " + notes.join(", "));
+    } else {
+        print("Note NOT found!");
+    }
+}
+
+// Search Note
+function searchNote() {
+    let note = parseInt(prompt("Enter note to search:"));
+    if (notes.includes(note)) {
+        print("Note FOUND!");
+    } else {
+        print("Note NOT FOUND!");
+    }
+}
+
+// Display Notes
+function displayNotes() {
+    let sorted = [...notes].sort((a, b) => b - a);
+    print("Current Notes:\n" + sorted.join(" "));
+}
+
+// Withdraw Cash
+function dispenseCash() {
+    let amount = parseInt(prompt("Enter amount to withdraw:"));
+    if (!amount) return;
+
+    let sorted = [...notes].sort((a, b) => b - a);
+    let remaining = amount;
+    let output = `Cash Breakdown for ${amount}:\n\n`;
+
+    sorted.forEach(note => {
+        if (remaining >= note) {
+            let count = Math.floor(remaining / note);
+            remaining -= count * note;
+            output += `${note} x ${count}\n`;
+        }
+    });
+
+    if (remaining !== 0)
+        output += "\nATM CANNOT DISPENSE EXACT AMOUNT!";
+    else
+        output += "\nTransaction Successful!";
+
+    print(output);
+}
+</script>
+
+</body>
+</html>
